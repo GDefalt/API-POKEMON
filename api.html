@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+</head>
+<style>
+
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f7f7;
+    flex-direction: column;
+}
+
+.pokemon-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pokemon-card {
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    background-color: #fff;
+    min-width: 100px;
+    transition: all .5s ease-in-out;
+}
+
+.pokemon-card:hover{
+    transform: scale(1.25);
+}
+
+
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: #0f8202;
+  animation: fillAnimation 2s linear forwards; 
+  z-index: -1;
+}
+
+@keyframes fillAnimation {
+  to {
+    width: 100%; 
+  }
+}
+
+@keyframes reverseFillAnimation {
+from{
+    width: 100%;
+}
+
+to{
+    width: 0;
+}
+}
+
+.btn-pokemon{
+    padding: 1rem;
+    border-radius: .5rem;
+    color: white;
+    background-color: #1c1c1c;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    border-color: #00ff7f;
+
+}
+
+.btn-comeback{
+    padding: .5rem;
+    border-radius: .3rem;
+    background-color: #1c1c1c;
+    color: white;
+    border-color: #00ff7f;
+    display: none;
+    cursor: pointer;
+}
+
+
+</style>
+<body>
+
+    <div class="fill"></div>
+
+    <button onclick="obterListaDePokemons()" class="btn-pokemon">Clique para obter a lista de pokemons</button>
+
+    <div class="pokemon-list">  </div>
+
+    
+
+    <button class="btn-comeback">Sair</button>
+
+
+    <script>
+
+
+
+        function obterListaDePokemons() {
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=10')
+        .then(response => response.json())
+        .then(data => {
+            const listaDePokemons = data.results;
+            const listaElement = document.querySelector('.pokemon-list');
+            const botao = document.querySelector(".btn-pokemon")
+            botao.style.display = "none"
+
+            btnComeback.style.display = "flex"
+
+            listaDePokemons.forEach(pokemon => {
+                const pokemonElement = document.createElement('div');
+                pokemonElement.classList.add('pokemon-card');
+                pokemonElement.textContent = pokemon.name;
+                listaElement.appendChild(pokemonElement);
+            });
+        })
+        .catch(error => console.error('Erro ao obter dados:', error));
+}
+
+const btnComeback = document.querySelector(".btn-comeback");
+
+btnComeback.addEventListener("click", () => {
+    const listaElement = document.querySelector('.pokemon-list');
+    listaElement.style.display = "none";
+
+    btnComeback.style.display = "none";
+
+    Object.assign(document.body.style, {
+        backgroundImage: 'url("./pokemon.webp")',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+    });
+
+    const fill = document.querySelector('.fill')
+    fill.style.animation = 'reverseFillAnimation 2s linear forwards';
+
+
+
+});
+
+
+
+    </script>
+</body>
+</html>
